@@ -14,10 +14,10 @@ This project integrates an MQTT client with a Django web application. It allows 
    You might need to install more dependencies depending on your setup.
 3. Make sure you have running mosquitto broker on you computer with the correct configuration ( Configure to run on port 8883 for tls support and also that the certificates and keys are present ).
 4. Navigate to src folder and execute
-5. ```bash
-   python3 manage.py runserver
-   ```
-   , which will start the django server and after that you can start using some endpoints to check the resulting functionality.
+```bash
+python3 manage.py runserver
+```
+which will start the django server and after that you can start using some endpoints to check the resulting functionality.
 
 ### Endpoints
 
