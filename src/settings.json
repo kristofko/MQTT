@@ -1,4 +1,0 @@
-{
-    // Adds a visual line length marker at column 80
-    "editor.rulers": [80]
-}
