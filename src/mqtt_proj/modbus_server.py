@@ -17,6 +17,8 @@ class ModbusServer:
             ir=ModbusSequentialDataBlock(0, [17]*100)   # Input Registers
         )
 
+        self.context = ModbusServerContext(slaves=self.store, single=True)
+
         # Setup Modbus server identity
         self.identity = ModbusDeviceIdentification()
         self.identity.VendorName = "modbus"
@@ -46,14 +48,15 @@ class ModbusServer:
             response = requests.get(url)
             data = response.json()
             data = data["data"]["priceUsd"]
-            self.context[0].setValues(3, 0, [data])  # 3 is the function code for holding registers
+            data = int(float(data))
+            self.store.setValues(3, 0, [data])  # 3 is the function code for holding registers
+            #data = self.store.getValues(3, 0, 1)
             print(f"Updated register 0 with value: {data}")
             
             # Wait for 5 seconds before generating new data
             time.sleep(5)
 
     def run(self):
-        self.context = ModbusServerContext(slaves=self.store, single=True)
         
         # Start a thread to update holding registers periodically
         print("Starting modbus server")

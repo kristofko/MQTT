@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 import json
 
 from pymongo import MongoClient
-from mongo_client import MongoClient
+from .mongo_client import MongoClient
 
 CA_CERT = "/etc/ssl/mosquitto/ca.crt"
 BROKER_CERT = "/etc/ssl/mosquitto/client.crt"
