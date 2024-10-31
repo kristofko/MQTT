@@ -15,15 +15,24 @@ class MQTTBroker():
         self.mongo_client = MongoClient("mongodb://localhost:27017/")
 
     def on_message(self, client, userdata, message: mqtt.MQTTMessage):
+        """
+        Specify the broker behaviour after receiving a message.
+        Load the obtained json and store the data in mongodb.
+        """
         data = json.loads(message.payload.decode('utf-8'))
         self.mongo_client.insert_sensor(data)
         print(f"Stored in MongoDB: {data}")
 
     # MQTT Subscriber Configuration
     def on_connect(self, client: mqtt.Client, userdata, flags, rc: int):
+        """
+        Specify the broker behaviour on connecting to the mqtt network.
+        If the connect is successful, subscribe to the 
+        'sensors/cryptocurrency' topic.
+        """
         if rc == 0:
             print("Connected to broker")
-            client.subscribe("sensors/cryptocurrency")  # Subscribe to the topic
+            client.subscribe("sensors/cryptocurrency")
         else:
             print("Connection failed with code", rc)
 

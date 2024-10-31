@@ -23,3 +23,6 @@ class MongoClient:
         except Exception as e:
             print(f"Error retrieving documents: {e}")
             return None
+    
+    def close(self):
+        self.client.close()

@@ -7,7 +7,14 @@ from .mongo_client import MongoClient
 
 clients = {}
 
-def get_mqtt_client(client_id) -> MQTTClient:
+def get_mqtt_client(client_id: str) -> MQTTClient:
+    """
+    Get a MQTTClient instance by its id, if it does
+    not exist create a new one with the passed id.
+    
+    Args:
+        client_id: Id of the client
+    """
     if client_id not in clients:
         clients[client_id] = MQTTClient(client_id)
         clients[client_id].run()
@@ -18,10 +25,9 @@ class ControlMQTTClient(View):
     def __init__(self) -> None:
         super().__init__()
 
-    def post(self, 
-             request: str = "", 
-             client_id: str = "", 
+    def post(self, request: str = "", client_id: str = "", 
              action: str = ""):
+        
         mqtt_client = get_mqtt_client(client_id)
 
         if action == "start":

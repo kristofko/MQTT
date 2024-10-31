@@ -17,15 +17,24 @@ class MQTTClient():
         self.client.connect("localhost", 8883, 300)
         self.sending_data = False
 
-    def fetch_data(self):
+    def fetch_data(self) -> json:
+        """
+        Send request to the coincap api and return the obtained data as json.
+        """
         url = 'https://api.coincap.io/v2/assets/bitcoin'
         response = requests.get(url)
         return response.json()
 
     def start_sending(self):
+        """
+        Command the MQTTCLient to start sending data to the network.
+        """
         self.sending_data = True
 
     def stop_sending(self):
+        """
+        Command the MQTTClient to stop sending data.
+        """
         self.sending_data = False
 
     def run(self):

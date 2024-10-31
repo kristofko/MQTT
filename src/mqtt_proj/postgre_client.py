@@ -7,6 +7,8 @@ class PostgreClient:
         pass
 
     def insert_data_to_postgresql(self, value: dict, table_name: str="sensor_table"):
+        connection = None
+        cursor     = None
         try:
             connection = psycopg2.connect(
                 dbname="sensors",
@@ -42,7 +44,7 @@ class PostgreClient:
 
         finally:
             # Close the cursor and connection
-            if cursor:
-                cursor.close()
             if connection:
                 connection.close()
+            if cursor:
+                cursor.close()

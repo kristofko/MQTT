@@ -6,7 +6,7 @@ from pymodbus.server import StartTcpServer
 from pymodbus.datastore import ModbusSlaveContext, ModbusServerContext
 from pymodbus.datastore import ModbusSequentialDataBlock
 from pymodbus.device import ModbusDeviceIdentification
-from postgre_client import PostgreClient
+from .postgre_client import PostgreClient
 
 class ModbusServer:
     def __init__(self) -> None:
@@ -33,6 +33,26 @@ class ModbusServer:
         }
 
         postgre_client.insert_data_to_postgresql(data)
+        
+            
+    def update_holding_registers(self):
+        """
+        Periodically fetch new data from 
+        coincap api and update the holding
+        register of modbus with the new data.
+        """
+        while True:
+            url = 'https://api.coincap.io/v2/assets/bitcoin'
+            response = requests.get(url)
+            data = response.json()
+            data = data["data"]["priceUsd"]
+            self.context[0].setValues(3, 0, [data])  # 3 is the function code for holding registers
+            print(f"Updated register 0 with value: {data}")
+            
+            # Wait for 5 seconds before generating new data
+            time.sleep(5)
+
+    def run(self):
         self.context = ModbusServerContext(slaves=self.store, single=True)
         
         # Start a thread to update holding registers periodically
@@ -45,19 +65,11 @@ class ModbusServer:
         StartTcpServer(context=self.context, 
                        identity=self.identity, 
                        address=("localhost", 5020))
-            
-    def update_holding_registers(self):
-        while True:
-            url = 'https://api.coincap.io/v2/assets/bitcoin'
-            response = requests.get(url)
-            data = response.json()
-            data = data["data"]["priceUsd"]
-            self.context[0].setValues(3, 0, [data])  # 3 is the function code for holding registers
-            print(f"Updated register 0 with value: {data}")
-            
-            # Wait for 5 seconds before generating new data
-            time.sleep(5)
 
-
+        
 if __name__ == "__main__":
+    """
+    Start the appli cation with:
+    python3 modbus_server.py
+    """
     client = ModbusServer()
